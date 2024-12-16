@@ -1,5 +1,6 @@
 {
   "name": "react-filter-hook",
+  "version": "1.0.0",
   "description": "A custom React hook for filtering with URL search parameters",
   "main": "dist/useFilter.js",
   "types": "dist/useFilter.d.ts",
@@ -8,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mohammadtmohsen/react-filter-hook.git"
+    "url": "git+https://github.com/mohammadtmohsen/react-filter-hook.git"
   },
   "keywords": [
     "react",
