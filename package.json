@@ -1,0 +1,31 @@
+{
+  "name": "react-filter-hook",
+  "description": "A custom React hook for filtering with URL search parameters",
+  "main": "dist/useFilter.js",
+  "types": "dist/useFilter.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohammadtmohsen/react-filter-hook.git"
+  },
+  "keywords": [
+    "react",
+    "hook",
+    "filter",
+    "search-params"
+  ],
+  "author": "Mohammad Taleb",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "typescript": "^5.7.2"
+  }
+}
