@@ -14,6 +14,4 @@ const parseValue = (
   return value;
 };
 
-export {
-  parseValue,
-};
+export { parseValue };

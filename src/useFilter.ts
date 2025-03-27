@@ -1,91 +1,61 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { parseValue } from './utils/helpers';
 
-// import { useDebouncedCallback } from 'use-debounce';
-
-interface DefaultFilters {
-  skip: number;
-  limit: number;
-}
-
 interface UseFilterOptions<T> {
-  namespace: string;
+  namespace?: string;
   initialFilters: T;
-  syncUrlParams?: boolean;
 }
 
-const useFilter = <
-  T extends Record<string, string | number | boolean | string[] | number[]> &
-    Partial<DefaultFilters>
->(
-  options: UseFilterOptions<T>
-) => {
-  const { namespace, initialFilters, syncUrlParams = true } = options;
+function useFilter<
+  T extends Record<string, string | number | boolean | string[] | number[]>
+>(options: UseFilterOptions<T>) {
+  const { namespace, initialFilters } = options;
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialParsedFilters = useMemo(() => {
-    const defaultFilters: DefaultFilters = {
-      skip: 0,
-      limit: 5,
-    };
-    const filters: T & DefaultFilters = {
-      ...defaultFilters,
-      ...initialFilters,
-    };
-    if (syncUrlParams) {
-      Object.keys(filters).forEach((key) => {
-        const paramKey = `${namespace}.${key}`;
-        const value = searchParams.get(paramKey);
-        if (value !== null) {
-          if (filters[key as keyof (T & DefaultFilters)] !== undefined) {
-            filters[key as keyof (T & DefaultFilters)] = parseValue(
-              value,
-              filters[key as keyof (T & DefaultFilters)]
-            ) as (T & DefaultFilters)[keyof (T & DefaultFilters)];
-          }
-        }
-      });
-    }
-    return filters;
-  }, [namespace, initialFilters, searchParams, syncUrlParams]);
+  const filters = useMemo(() => {
+    const derivedFilters: T = { ...initialFilters };
 
-  const [filters, setFilters] = useState<T & DefaultFilters>(
-    initialParsedFilters
-  );
+    Object.keys(derivedFilters).forEach((key) => {
+      const paramKey = namespace ? `${namespace}-${key}` : key;
+      const urlValue = searchParams.get(paramKey);
+      if (urlValue !== null) {
+        derivedFilters[key as keyof T] = parseValue(
+          urlValue,
+          derivedFilters[key as keyof T]
+        ) as T[keyof T];
+      }
+    });
 
-  // const debouncedSetSearchParams = useDebouncedCallback((newSearchParams: URLSearchParams) => {
-  //   setSearchParams(newSearchParams);
-  // }, 1000);
+    return derivedFilters;
+  }, [namespace, initialFilters, searchParams]);
 
   const onChangeFilter = useCallback(
-    (key: keyof (T & DefaultFilters), value: T[keyof T & DefaultFilters]) => {
-      setFilters((prevFilters) => {
-        const newFilters = { ...prevFilters, [key]: value };
+    (key: keyof T, value?: T[keyof T], option?: { resetSkip?: boolean }) => {
+      const newSearchParams = new URLSearchParams(searchParams);
 
-        if (syncUrlParams) {
-          const newSearchParams = new URLSearchParams(searchParams);
-          Object.keys(newFilters).forEach((filterKey) => {
-            const paramKey = `${namespace}.${filterKey}`;
-            const filterValue = newFilters[filterKey];
-            if (Array.isArray(filterValue)) {
-              newSearchParams.set(paramKey, filterValue.join(','));
-            } else {
-              newSearchParams.set(paramKey, String(filterValue));
-            }
-          });
+      const paramKey = namespace ? `${namespace}-${String(key)}` : key;
+      if (!value) {
+        newSearchParams.delete(String(paramKey));
+      } else if (Array.isArray(value)) {
+        newSearchParams.set(String(paramKey), value.join(','));
+      } else {
+        newSearchParams.set(String(paramKey), String(value));
+      }
 
-          // debouncedSetSearchParams(newSearchParams);
-          setSearchParams(newSearchParams);
-        }
+      if (option?.resetSkip) {
+        newSearchParams.set(namespace ? `${namespace}-skip` : 'skip', '0');
+      }
 
-        return newFilters;
-      });
+      setSearchParams(newSearchParams);
     },
-    [namespace, searchParams, setSearchParams, syncUrlParams]
+    [namespace, searchParams, setSearchParams]
   );
 
-  return { filters, onChangeFilter };
-};
+  return {
+    filters,
+    onChangeFilter,
+  };
+}
 
 export default useFilter;

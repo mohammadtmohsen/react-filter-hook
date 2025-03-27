@@ -10,7 +10,7 @@ A custom hook for managing filter state and synchronizing it with URL search par
 
 | Name      | Description                                                          | Props with Types                                                                              |
 | --------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| useFilter | Manages filter state and synchronizes it with URL search parameters. | `namespace: string`, `initialFilters: T & Partial<DefaultFilters>`, `syncUrlParams?: boolean` |
+| useFilter | Manages filter state and synchronizes it with URL search parameters. | `namespace: string`, `initialFilters: T` |
 
 </br>
 
@@ -25,7 +25,6 @@ const { filters, onChangeFilter } = useFilter<FilterType>({
     skip: 0,
     limit: 5,
   },
-  syncUrlParams: true,
 });
 ```
 
@@ -37,9 +36,6 @@ const { filters, onChangeFilter } = useFilter<FilterType>({
 - **`initialFilters`**: `T & Partial<DefaultFilters>`  
   An object containing the initial filter values.
 
-- **`syncUrlParams`**: `boolean`  
-  A boolean to indicate whether to synchronize the filter state with URL search parameters.
-
 </br>
 
 ### Returns
@@ -47,7 +43,7 @@ const { filters, onChangeFilter } = useFilter<FilterType>({
 - **`filters`**: `T & DefaultFilters`  
   The current filter state.
 
-- **`onChangeFilter`**: `(key: keyof (T & DefaultFilters), value: T[keyof T & DefaultFilters]) => void`  
+- **`onChangeFilter`**: `(key: keyof T, value: T[keyof T]) => void`  
   A function to update a specific filter value.
 
 ### Basic Usage
@@ -71,7 +67,6 @@ const MyComponent = () => {
       skip: 0,
       limit: 5,
     },
-    syncUrlParams: true,
   });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
