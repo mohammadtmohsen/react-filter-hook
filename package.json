@@ -1,6 +1,6 @@
 {
   "name": "react-filter-hook",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A custom React hook for filtering with URL search parameters",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
