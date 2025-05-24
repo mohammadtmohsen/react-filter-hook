@@ -1,4 +1,4 @@
-const parseValue = (
+export const parseValue = (
   value: string,
   defaultValue: string | number | boolean | string[] | number[]
 ) => {
@@ -13,5 +13,3 @@ const parseValue = (
   if (typeof defaultValue === 'number') return parseFloat(value);
   return value;
 };
-
-export { parseValue };

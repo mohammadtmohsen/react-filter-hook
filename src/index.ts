@@ -1,2 +1,3 @@
-export { default } from './useFilter';
-export { default as useFilter } from './useFilter';
+// Main export
+export { default } from './useFilters';
+export { default as useFilters } from './useFilters';

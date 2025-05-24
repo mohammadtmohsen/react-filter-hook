@@ -1,0 +1,29 @@
+# Source
+src/
+
+# Tests
+tests/
+coverage/
+jest.config.js
+
+# Config files
+tsconfig*.json
+.prettierrc
+.eslintrc
+.editorconfig
+
+# Development
+.git/
+.github/
+.gitignore
+.npmignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
